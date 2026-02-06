@@ -61,7 +61,7 @@ public class StudenteController {
             model.addAttribute("idPersona", p.getId());
             log.info("Altro log");
         }
-        log.info("Log aggionto qui");
+        log.info("Log aggiunto qui");
         model.addAttribute("studenti", studenteService.getAll());
         return "studenti/list";
     }
