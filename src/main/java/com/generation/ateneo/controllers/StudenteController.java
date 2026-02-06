@@ -58,8 +58,9 @@ public class StudenteController {
         if(authentication != null){
             UserAccount user = (UserAccount)authentication.getPrincipal();
             Persona p = user.getPersona();
-            model.addAttribute("idPersona", p.getId());
+            model.addAttribute("id", p.getId());
         }
+        log.info("Log aggionto qui");
         model.addAttribute("studenti", studenteService.getAll());
         return "studenti/list";
     }
