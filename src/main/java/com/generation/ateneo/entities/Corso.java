@@ -22,7 +22,7 @@ import lombok.ToString;
 @Entity
 @Table(name="corsi")
 @Data
-@EqualsAndHashCode(onlyExplicitlyIncluded = true)
+@EqualsAndHashCode(onlyExplicitlyIncluded = true,callSuper=false)
 public class Corso extends GenericEntity{
     
     @EqualsAndHashCode.Include

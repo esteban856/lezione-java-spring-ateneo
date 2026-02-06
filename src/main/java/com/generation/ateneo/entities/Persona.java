@@ -13,7 +13,6 @@ import jakarta.persistence.Inheritance;
 import jakarta.persistence.InheritanceType;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.PostLoad;
-import jakarta.persistence.PrePersist;
 import jakarta.persistence.PreUpdate;
 import jakarta.persistence.Table;
 import jakarta.persistence.Transient;
@@ -47,7 +46,7 @@ uso questa strategia quando la velocità di esecuzione delle query è impattante
 - TABLE_PER_CLASS:crea tante tabelle quante sono le classi concrete lato java
 ognisottovclasse ha una sua tabella lato db che contiene tutti i dati di questa classe
 */
-@EqualsAndHashCode(onlyExplicitlyIncluded = true)
+@EqualsAndHashCode(onlyExplicitlyIncluded = true, callSuper = false)
 @Inheritance(strategy = InheritanceType.JOINED)
 public abstract class Persona extends GenericEntity{
 

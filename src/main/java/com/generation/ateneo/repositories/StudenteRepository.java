@@ -25,7 +25,6 @@ JpaRepository fornisce metodi già implementati:
 */
 import org.springframework.stereotype.Repository;
 import com.generation.ateneo.entities.Studente;
-import java.util.List;
 
 
 @Repository 

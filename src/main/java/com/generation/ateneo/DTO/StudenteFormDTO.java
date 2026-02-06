@@ -6,7 +6,6 @@ import org.springframework.format.annotation.DateTimeFormat;
 
 import com.generation.ateneo.entities.StatusStudente;
 
-import jakarta.annotation.Nonnull;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;

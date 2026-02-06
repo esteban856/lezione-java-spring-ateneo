@@ -34,7 +34,7 @@ import lombok.EqualsAndHashCode;
     }
 )
 @Data
-@EqualsAndHashCode(onlyExplicitlyIncluded = true)
+@EqualsAndHashCode(onlyExplicitlyIncluded = true,callSuper = false)
 public class Iscrizione extends GenericEntity{
     
     @EqualsAndHashCode.Include

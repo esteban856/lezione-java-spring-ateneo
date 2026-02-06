@@ -2,7 +2,6 @@ package com.generation.ateneo.DTO;
 
 import java.time.LocalDateTime;
 
-import org.jspecify.annotations.Nullable;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import jakarta.validation.constraints.Max;

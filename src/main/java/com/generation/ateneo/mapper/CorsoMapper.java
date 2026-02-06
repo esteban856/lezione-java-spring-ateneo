@@ -2,7 +2,6 @@ package com.generation.ateneo.mapper;
 
 import org.springframework.stereotype.Component;
 
-import com.generation.ateneo.DTO.CorsoFormDTO;
 import com.generation.ateneo.DTO.CorsoRecordDTO;
 import com.generation.ateneo.entities.Corso;
 

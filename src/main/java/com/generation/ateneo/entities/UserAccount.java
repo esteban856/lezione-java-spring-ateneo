@@ -34,7 +34,7 @@ import lombok.ToString;
     @UniqueConstraint(name="uk_user_persona",columnNames = "persona_id")
 })
 @Data
-@EqualsAndHashCode(onlyExplicitlyIncluded = true)
+@EqualsAndHashCode(onlyExplicitlyIncluded = true, callSuper=false)
 public class UserAccount extends GenericEntity implements UserDetails{
 
     @EqualsAndHashCode.Include

@@ -19,7 +19,7 @@ import lombok.ToString;
     uniqueConstraints = @UniqueConstraint(name="uk_nome_ruolo",columnNames = "nome")
 )
 @Data
-@EqualsAndHashCode(onlyExplicitlyIncluded = true)
+@EqualsAndHashCode(onlyExplicitlyIncluded = true, callSuper = false)
 public class Ruolo extends GenericEntity{
 
     @EqualsAndHashCode.Include
