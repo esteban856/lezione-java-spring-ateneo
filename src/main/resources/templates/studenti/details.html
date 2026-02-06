@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Dettaglio Studente')}"></head>
+
+<body>
+    <header th:replace="~{fragments/layout :: navbar}"></header>
+
+    <h1>Dettaglio Studente <span sec:authorize="hasRole('STU')"> - <a th:href="@{/logout}">Logout</a></span></h1>
+    <p>
+        <a th:href="@{/studenti}">Torna alla lista</a>
+    </p>
+
+    <section>
+        <h2>Anagrifica</h2>
+        <ul>
+            <!-- th:text="${studente.id}" sostituisce il segnaposto con il valore dello studente 
+            passato dal controller -->
+            <li><b>ID:</b> <span th:text="${studente.id}"></span></li>
+            <li><b>Nome:</b> <span th:text="${studente.nome}"></span></li>
+            <li><b>Cognome:</b> <span th:text="${studente.cognome}"></span></li>
+            <li><b>Età:</b> <span th:text="${studente.eta != null ? studente.eta : '-'}"></span></li>
+            <li><b>Email:</b> <span th:text="${studente.email}"></span></li>
+            <li><b>Telefono:</b> <span th:text="${studente.telefono}"></span></li>
+            <li><b>Data di nascita:</b> 
+                <span th:text=
+                "${studente.dataNascita != null ? #temporals.format(studente.dataNascita,'dd/MM/yyyy') : '-'}">
+                </span></li>
+        </ul>
+    </section>
+
+    <section>
+        <h2>Dati studente</h2>
+        <ul>
+            <li><b>Matricola:</b> <span th:text="${studente.matricola}"></span></li>
+            <li><b>Corso Di Laurea:</b> <span th:text="${studente.corsoDiLaurea}"></span></li>
+            <li><b>Anno di Corso:</b> <span th:text="${studente.annoDiCorso}"></span></li>
+            <li><b>Status:</b> <span th:text="${studente.status}"></span></li>
+        </ul>
+    </section>
+<!-- 
+    Elenco dei corsi a cui si può iscrivere (menù tendina)
+    elenco dei corsi a cui è iscritto(e disiscrizione) -->
+    <section id="iscrizioni">
+
+        <h2>Iscrizioni</h2>
+        <!-- qui uno studente deve poter iscriversi ad un corso -->
+        <h3>Iscriviti ad un corso</h3>
+        <form sec:authorize="hasRole('STU')" th:action="@{/studenti/{id}/iscrizioni (id=${studente.id})}" method="post">
+            <select name="corsoId" required>
+                <option value="" disabled selected>--Seleziona un corso--</option>
+                <option th:each="c : ${corsiDisponibili}" th:value="${c.id}" th:text="${c.titolo}">
+                </option>
+            </select>
+            <button type="submit">Iscriviti</button>
+        </form>
+    </section>
+
+    <h3>Elenco iscrizioni</h3>
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Codice</th>
+                <th>Titolo</th>
+                <th>Descrizione</th>
+                <th>Data inizio:</th>
+                <th>Data fine:</th>
+                <th>Crediti</th>
+                <th>Docente</th>
+                <th>Status</th>
+                <th>Voto finale</th>
+                <th>Data di iscrizione</th>
+                <th>Azioni</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr th:if="${#lists.isEmpty(studente.iscrizioni)}">
+               <td colspan="12">Nessuna iscrizione attiva</td>
+            </tr>
+
+            <!-- th:classappend aggiunge (non sovrascrive) una o più classi CSS all'attributo class esistente dell'elemento
+            highlightIscrizioneId != null and i.id == highlightIscrizioneId è un ternario che
+            verifica che esista un id da evidenziare e che corrisponda all'iscrizione corrente. 
+            il valore di highlightIscrizioneId viene passato dal controller tramite il model
+             e usato per evidenziare la riga corrispondente -->
+            <tr th:each="i : ${studente.iscrizioni}"
+            th:classappend="${(highlightIscrizioneId != null and i.id == highlightIscrizioneId) ? 'row-highlight' : ''}">
+                <td th:text="${i.id}"></td>
+                <td th:text="${i.corso.codice}"></td>
+
+                <!-- metto un link sul titolo del corso che porta alla pagina di dettaglio del corso -->
+                <td>
+                    <!-- questo link compare solo se il corso non è null -->
+                    <a th:if="${i.corso != null}" th:href="@{/corsi/{id} (id=${i.corso.id})}"
+                       th:text="${i.corso.titolo}"></a>
+                       <span th:if="${i.corso == null}">-</span> <!-- se il corso non c'è metto un trattino -->
+                </td>
+                <td th:text="${i.corso.descrizione}"></td>
+                <td th:text="${i.corso.dataInizio != null ? #temporals.format(i.corso.dataInizio, 'dd/MM/yyyy HH:mm') : '-'}"></td>
+                <td th:text="${i.corso.dataFine != null ? #temporals.format(i.corso.dataFine, 'dd/MM/yyyy HH:mm') : '-'}"></td>
+                <td th:text="${i.corso.crediti}"></td>
+                <td th:text="${i.corso.docente == null ? '-' : i.corso.docente.cognome}"></td>
+                <td th:text="${i.statusIscrizione}"></td>
+                <td th:text="${i.votoFinale != null ? i.votoFinale : '-'}"></td>
+                <td th:text="${i.dataIscrizione != null ? #temporals.format(i.dataIscrizione, 'dd/MM/yyyy') : '-'}"></td>
+                <td>
+                    <!-- form per inviare la richiesta di disiscrizione, tramite la form con il metodo POST
+                    mando l'id dell'iscrizione da rimuovere -->
+                    <form sec:authorize="hasRole('STU')" th:action="@{/studenti/{studenteId}/iscrizioni/{iscrizioneId}/delete (studenteId=${studente.id}, iscrizioneId=${i.id})}"
+                          method="post" data-confirm="Sei sicuro di voler togliere l'iscrizione?">
+                        <button type="submit">Rimuovi</button>
+                    </form>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <footer th:replace="~{fragments/layout :: footer}"></footer>
+</body>
+</html>

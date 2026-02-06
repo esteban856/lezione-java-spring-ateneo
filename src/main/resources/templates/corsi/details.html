@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.thymeleaf.org">
+
+<head th:replace="~{fragments/layout :: head('Dettaglio Corso')}"></head>
+
+<body>
+    <header th:replace="~{fragments/layout :: navbar}"></header>
+    <div class="container">
+        <h1>Dettaglio Corso</h1>
+        <p>
+            <a th:href="@{/corsi}">Torna alla lista corsi</a>
+            <a th:href="@{/corsi/{id}/edit/(id=${corso.id})}">Modifica Corso</a>
+        </p>
+
+        <div class="card">
+            <p><b>Codice:</b> <span th:text="${corso.codice}"></span></p>
+            <p><b>Titolo:</b> <span th:text="${corso.titolo}"></span></p>
+            <p><b>Crediti:</b> <span th:text="${corso.crediti}"></span></p>
+            <p><b>Descrizione:</b> <span th:text="${corso.descrizione}"></span></p>
+            <p><b>Data Inizio:</b> <span th:text="${#temporals.format(corso.dataInizio, 'dd/MM/yyyy HH:mm')}"></span></p>
+            <p><b>Data Fine:</b> <span th:text="${#temporals.format(corso.dataFine, 'dd/MM/yyyy HH:mm')}"></span></p>
+            <p><b>Docente:</b>
+                <span th:if="${corso.docente != null}"
+                    th:text="${corso.docente.nome + ' ' + corso.docente.cognome}"></span>
+                <span th:if="${corso.docente == null}">N/A</span>
+            </p>
+        </div>
+        <p>
+            <!-- th:if inserisce la condizione per mostrare o nascondere il blocco di codice
+            in questo caso se il valore di showIscritti è true mostra la lista degli studenti iscritti 
+            sintassi: (id=${corso.id},showIscritti=true)
+            significa che:
+            id=${corso.id} permette di indicare come verra assegnato il valore dell'id del corso
+            showIscritti=true indica che si vuole mostrare la lista degli studenti 
+            cioè da il valore true alla variabile showIscritti  -->
+            <a class="btn" th:if="${!showIscritti}" th:href="@{/corsi/{id}(id=${corso.id},showIscritti=true)}">
+                Mostra studenti Iscritti</a>
+
+            <a class="btn" th:if="${showIscritti}" th:href="@{/corsi/{id}(id=${corso.id},showIscritti=false)}">
+                Nascondi studenti Iscritti</a>
+        </p>
+
+        <a th:href="@{/corsi}" class="btn">Torna alla lista corsi</a>
+
+        <!-- qui creo la tabella per fare vedere gli studenti iscritti al corso -->
+        <div th:if="${showIscritti}">
+            <h2>Studenti Iscritti</h2>
+            <table>
+                <thead>
+                    <tr><th>ID Iscrizione</th>
+                        <th>Studente</th>
+                        <th>Matricola</th>
+                        <th>Data iscrizione</th>
+                        <th>Azioni</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:if="${#lists.isEmpty(corso.iscrizioni)}">
+                        <td colspan="5">Nessuno studente iscritto</td>
+                    </tr>
+                    <tr th:each="i : ${corso.iscrizioni}">
+                        <td th:text="${i.id}"></td>
+
+                        <td>
+                            <a th:if="${i.studente != null}" 
+                               th:href="@{/studenti/{id}(id=${i.studente.id})}"
+                               th:text="${i.studente.nome + ' ' + i.studente.cognome}">
+                            </a>
+                            <span th:if="${i.studente == null}">'-'</span>
+                        </td>
+                        <td th:text="${i.studente != null ? i.studente.matricola : '-'}"></td>
+                        <td th:text="${i.dataIscrizione != null ? #temporals.format(i.dataIscrizione, 'dd/MM/yyyy') : '-'}"></td>
+                        <td>
+                            <!-- se aggiungo alla parte finale dell'href + '#iscrizioni'
+                            sto mettendo un ancora che mi porta direttamente alla sezione iscrizioni
+                            quindi quando clicco sul link vengo portato direttamente alla tabella iscrizioni
+                            cioè dopo # va messo l'id dell'elemento html dove voglio essere portato
+                            quindi il browser scoore la pagina di destinazione e si posiziona sull'elemento con quell'id -->
+                            <a class="btn" 
+                            th:href="@{/studenti/{id}(id=${i.studente.id}, iscrizioneId=${i.id})} + '#iscrizioni'">
+                            Vai all'iscrizione</a>
+                        </td>
+                    </tr>
+                </tbody>            
+            </table>
+        </div>
+    </div>
+    <footer th:replace="~{fragments/layout :: footer}"></footer>
+</body>
+
+</html>

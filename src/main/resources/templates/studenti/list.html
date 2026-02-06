@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.thymeleaf.org"></html>
+<head th:replace="~{fragments/layout :: head('Lista degli Studenti')}"></head>
+<body>
+
+    <header th:replace="~{fragments/layout :: navbar}"></header>
+    
+    
+    <main>
+        <h1>Studenti</h1>
+        <!-- inserimento di un nuovo studente -->
+        <p sec:authorize="hasRole('DOC')">
+           <a th:href="@{/studenti/new}">+ Nuovo Studente</a> 
+        </p>
+        
+        <section>
+            <!-- tabella con gli studenti
+            dati studenti   dettaglio   modificare  disattivare -->
+            <table>
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Studente</th>
+                        <th>Email</th>
+                        <th>Matricola</th>
+                        <th>Corso di Laurea</th>
+                        <th>Status</th>
+                        <th>Dettaglio</th>
+                        <th>Modifica</th>
+                        <th>Disattiva</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:if="${#lists.isEmpty(studenti)}">
+                        <td colspan="9">Nessuno studente presente.</td>
+                    </tr>
+
+                    <tr th:each="s : ${studenti}">
+                        <!-- th:href="" link all'endopint che porta al dettaglio dello studente -->
+                        <td>
+                            <a th:if="${#authorization.expression('hasRole(''DOC'')') || s.id == idPersona}" th:href="@{/studenti/{id}(id=${s.id})}" th:text="${s.id}">1</a>
+                        </td> 
+                        <td th:text="${s.nominativoCompleto}">Mario Rossi</td>
+                        <td th:text="${s.email}">mario.rossi@mail.com</td>
+                        <td>
+                             <!-- th:href="" link all'endopint che porta al dettaglio dello studente -->
+                            <a th:if="${#authorization.expression('hasRole(''DOC'')') || s.id == idPersona}" th:href="@{/studenti/{id}(id=${s.id})}" th:text="${s.matricola}">S123</a>
+                        </td>
+                        <td th:text="${s.corsoDiLaurea}">Informatica</td>
+                        <td th:text="${s.status}">Attivo</td>
+                        <td>
+                            <a th:if="${#authorization.expression('hasRole(''DOC'')') || s.id == idPersona}" th:href="@{/studenti/{id}(id=${s.id})}">Dettaglio</a>
+                        </td>
+                        <td>
+                            <!-- /studenti -> prima parte dell'url 
+                             /{id} è un valore parte dell'url, {id} è un segnaposto che sta ad indicare
+                             che poi li verrà inserito un valore che corrisponde all'id ello studente
+                             passo l'id come parte dell'url
+                                /edit parte dell'endpoint specifica del metodo ceh risponde a questa chiamata
+                                (id=${s.id}) -> assegnazione del valore del placeholder
+                                cioè il placeholder {id} verrà sostuituo con s.id
+                                /studenti/2/edit -> esempio di endpoint per l'update dello studente 2
+                                 --> 
+                            <a sec:authorize="hasRole('DOC')" th:href="@{/studenti/{id}/edit(id=${s.id})}">Modifica</a>
+                        </td>
+                        <td>
+                            <!-- URL: /studenti/2/delete -->
+                            <form sec:authorize="hasRole('DOC')" th:action="@{/studenti/{id}/delete (id=${s.id})}"
+                                    method="post" 
+                                    style="display: inline;" 
+                                    data-confirm="Vuoi disattivare questo studente?">
+                                <button type="submit">Disattiva</button>
+                            </form>
+                        </td>
+                    </tr>
+                </tbody>
+
+            </table>
+
+        </section>
+        
+    </main>
+
+    <footer th:replace="~{fragments/layout :: footer}"></footer>
+</body>
+</html>

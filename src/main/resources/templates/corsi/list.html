@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Lista Corsi')}"></head>
+
+<body>
+    <header th:replace="~{fragments/layout :: navbar}"></header>
+    <main>
+        <div class="container">
+            <h1>Corsi</h1>
+
+            <!-- link alla form per aggiungere un nuovo corso -->
+            <p><a th:href="@{/corsi/new}" class="btn">+ Nuovo Corso</a></p>
+
+            <table>
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Codice</th>
+                        <th>Titolo</th>
+                        <th>Docente</th>
+                        <th>Azioni</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:if="${#lists.isEmpty(corsi)}">
+                        <td colspan="5">Nessun corso presente.</td>
+                    </tr>
+                    <tr th:each="c : ${corsi}">
+                        <td th:text="${c.id}"></td>
+                        <td th:text="${c.codice}"></td>
+                        <td th:text="${c.titolo}"></td>
+                        <td th:text="${c.docente != null ? (c.docente.nome + ' ' + c.docente.cognome) : '-'}"></td>
+                        <td>
+                            <a th:href="@{/corsi/{id} (id=${c.id})}">Dettaglio</a>
+                            <a th:href="@{/corsi/{id}/edit (id=${c.id})}">Modifica</a>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+
+
+        </div>
+
+    </main>
+    <footer th:replace="~{fragments/layout :: footer}"></footer>
+</body>
+</html>

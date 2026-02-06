@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.thymeleaf.org">
+
+<head th:replace="~{fragments/layout :: head(mode == 'create' ? 'Nuovo Corso' : 'Modifica Corso')}"></head>
+
+<body>
+    <header th:replace="~{fragments/layout :: navbar}"></header>
+    <div class="container">
+        <h1 th:text="${mode == 'create' ? 'Nuovo Corso' : 'Modifica Corso'}"></h1>
+
+        <!-- form per la insert -> create -->
+        <form th:if="${mode == 'create'}" th:object="${corsoDto}" th:action="@{/corsi}" method="post">
+
+            <div th:if="${#fields.hasErrors('*')}" class="alert alert-error">
+                Controlla i campi evidenziati
+            </div>
+
+            <label>Codice:
+                <input type="text" th:field="*{codice}">
+                <small th:if="${#fields.hasErrors('codice')}" th:errors="*{codice}"></small>
+            </label><br>
+
+            <label>Titolo:
+                <input type="text" th:field="*{titolo}">
+                <small th:if="${#fields.hasErrors('titolo')}" th:errors="*{titolo}"></small>
+            </label><br>
+
+            <label>Crediti:
+                <input type="number" min="2" max="18" th:field="*{crediti}">
+                <small th:if="${#fields.hasErrors('crediti')}" th:errors="*{crediti}"></small>
+            </label><br>
+
+            <label>Descrizione:
+                <textarea th:field="*{descrizione}"></textarea>
+            </label><br>
+
+            <label>Data Inizio:
+                <input type="datetime-local" th:field="*{dataInizio}">
+                <small th:if="${#fields.hasErrors('dataInizio')}" th:errors="*{dataInizio}"></small>
+            </label><br>
+
+            <label>Data Fine:
+                <input type="datetime-local" th:field="*{dataFine}">
+                <small th:if="${#fields.hasErrors('dataFine')}" th:errors="*{dataFine}"></small>
+            </label><br>
+
+            <!-- <label>Docente:
+                <select  th:field="*{docenteId}">
+                    <option value="" disabled selected>--Seleziona docente--</option>
+                    <option th:each="d : ${docenti}" th:value="${d.id}" th:text="${d.nome + ' ' + d.cognome}"></option>
+                </select>
+                <small th:if="${#fields.hasErrors('docenteId')}" th:errors="*{docenteId}"></small>
+            </label><br> -->
+
+            <button class="btn" type="submit">Crea</button>
+        </form>
+
+        <!-- FORM EDIT -->
+         <form th:if="${mode == 'edit' and corsoDto.id != null}" th:object="${corsoDto}" 
+                th:action="@{/corsi/{id}(id=${corsoDto.id})}" method="post">
+
+                <input type="hidden" th:field="*{id}">
+
+            <div th:if="${#fields.hasErrors('*')}" class="alert alert-error">
+                Controlla i campi evidenziati
+            </div>
+
+            <label>Codice:
+                <input type="text" th:field="*{codice}">
+                <small th:if="${#fields.hasErrors('codice')}" th:errors="*{codice}"></small>
+            </label><br>
+
+            <label>Titolo:
+                <input type="text" th:field="*{titolo}">
+                <small th:if="${#fields.hasErrors('titolo')}" th:errors="*{titolo}"></small>
+            </label><br>
+
+            <label>Crediti:
+                <input type="number" min="2" max="18" th:field="*{crediti}">
+                <small th:if="${#fields.hasErrors('crediti')}" th:errors="*{crediti}"></small>
+            </label><br>
+
+            <label>Descrizione:
+                <textarea th:field="*{descrizione}"></textarea>
+            </label><br>
+
+            <label>Data Inizio:
+                <input type="datetime-local" th:field="*{dataInizio}">
+                <small th:if="${#fields.hasErrors('dataInizio')}" th:errors="*{dataInizio}"></small>
+            </label><br>
+
+            <label>Data Fine:
+                <input type="datetime-local" th:field="*{dataFine}">
+                <small th:if="${#fields.hasErrors('dataFine')}" th:errors="*{dataFine}"></small>
+            </label><br>
+
+            <!-- <label>Docente:
+                <select  th:field="*{docenteId}">
+                    <option value="" disabled selected>--Seleziona docente--</option>
+                    <option th:each="d : ${docenti}" th:value="${d.id}" th:text="${d.nome + ' ' + d.cognome}"></option>
+                </select>
+                <small th:if="${#fields.hasErrors('docenteId')}" th:errors="*{docenteId}"></small>
+            </label><br> -->
+
+            <button class="btn" type="submit">Salva</button>
+        </form>
+
+    </div>
+    <footer th:replace="~{fragments/layout :: footer}"></footer>
+</body>
+
+</html>

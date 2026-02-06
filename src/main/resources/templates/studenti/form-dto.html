@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.thymeleaf.org">
+
+<head th:replace="~{fragments/layout :: head(mode=='create' ? 'Nuovo studente':'Modifica studente')}"> </head>
+
+<body>
+
+    <header th:replace="~{fragments/layout :: navbar}"></header>
+    <h1 th:text="${mode == 'create' ? 'Nuovo studente' : 'Modifica studente'}">Form</h1>
+    <!-- form per la insert, creazione di un nuovo studente 
+     th:action -> indirizzo a cui mando i dati della form
+     cioè ci sarà un metodo nel controller, se sono nella form dgli studenti mi aspetto nel controller
+     degli studenti, che un metodo mappato con questo endpoint /studenti
+     inoltre method=post
+     indica che invio i dati della form tramite body della richiesta, quindi nel controller ci sarà un metodo
+     PostMapping mappato(/studenti)-->
+    <form th:object="${studenteDto}" th:action="@{/studenti}" method="post" th:if="${mode == 'create'}">
+
+        <!-- #fields.hasErrors() è una utility di Thymeleaf serve a verificare errori di validazione
+        con * dentro () sto cercando errori globali -->
+        <div th:if="${#fields.hasErrors('*')}" class="alert alert-error">
+            Controlla i campi evidenziati
+        </div>
+        <fieldset>
+            <legend>Anagrifica</legend>
+
+            <label>Nome:
+                <input type="text" th:field="*{nome}">
+                <small th:if="${#fields.hasErrors('nome')}" th:errors="*{nome}"></small>
+                <!-- th:errors="campo": permette di stampare i messaggi di errore associati a quel campo
+                i messaggi di errore vengono prodotti da sprinf MVC nel controller
+                scattano per due motivi:
+                1. la validazione messa sul campo del dto non rispetta i criteri
+                2. nel service/controller ci sono metodi di controllo 
+                che rispetto al valore inserito in questo campo danno errore 
+                th:if=condizione permette di mostrare o nascondere l'elemento, se la condizione è vera lo mostra
+                la condizione si base sul fatto che siano stati catturati errori su quel campo
+                 -->
+            </label>
+            <br />
+
+            <label>Cognome:
+                <input type="text" th:field="*{cognome}">
+                <small th:if="${#fields.hasErrors('cognome')}" th:errors="*{cognome}"></small>
+            </label>
+            <br />
+
+            <label>Email:
+                <input type="email" th:field="*{email}">
+                <small th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></small>
+            </label>
+            <br />
+
+            <label>Telefono:
+                <input type="text" th:field="*{telefono}">
+                <small th:if="${#fields.hasErrors('telefono')}" th:errors="*{telefono}"></small>
+            </label>
+            <br />
+
+            <label>Data di nascita:
+                <input type="date" th:field="*{dataNascita}">
+                <small th:if="${#fields.hasErrors('dataNascita')}" th:errors="*{dataNascita}"></small>
+            </label>
+            <br />
+        </fieldset>
+        <fieldset>
+            <legend>Dati studente</legend>
+
+            <label>Matricola:
+                <input type="text" th:field="*{matricola}">
+                <small th:if="${#fields.hasErrors('matricola')}" th:errors="*{matricola}"></small>
+            </label>
+            <br />
+
+            <label>Corso di Laurea:
+                <input type="text" th:field="*{corsoDiLaurea}">
+                <small th:if="${#fields.hasErrors('corsoDiLaurea')}" th:errors="*{corsoDiLaurea}"></small>
+            </label>
+            <br />
+
+            <label>Anno di corso:
+                <input type="number" th:field="*{annoDiCorso}">
+                <small th:if="${#fields.hasErrors('annoDiCorso')}" th:errors="*{annoDiCorso}"></small>
+            </label>
+            <br />
+
+            <label>Status:
+                <select th:field="*{status}">
+                    <option th:each="st : ${statusValues}" th:value="${st}" th:text="${st}"></option>
+                </select>
+                <small th:if="${#fields.hasErrors('status')}" th:errors="*{status}"></small>
+            </label>
+            <br />
+
+            <button type="submit">Crea</button>
+        </fieldset>
+    </form>
+
+    <!-- form UPDATE/EDIT -->
+     <!-- th:action="@{/studenti/{id}/edit(id=${studenteDto.id})}"
+      quando clicco su salva qui indico il percorso,l'url dove vanno mandati i valori 
+        {id} è un placeholder
+        (id=${studenteDto.id}) indico come assegnare un valore al segnaposto
+        cioè deve prendere l'id dello studenteDto che prende dal model, sarà infatti il controller alla chiamat get
+        a salvere in questo campo i valori dello studente}-->
+     <form th:object="${studenteDto}" th:action="@{/studenti/{id} (id=${studenteDto.id})}"
+            method="post" 
+            th:if="${mode == 'edit' and studenteDto.id != null}">
+
+        <!-- #fields.hasErrors() è una utility di Thymeleaf serve a verificare errori di validazione
+        con * dentro () sto cercando errori globali -->
+        <div th:if="${#fields.hasErrors('*')}" class="alert alert-error">
+            Controlla i campi evidenziati
+        </div>
+        <div>
+            <input type="hidden" th:field="*{id}">
+        </div>
+        <fieldset>
+            <legend>Anagrifica</legend>
+
+            <label>Nome:
+                <input type="text" th:field="*{nome}">
+                <small th:if="${#fields.hasErrors('nome')}" th:errors="*{nome}"></small>
+                <!-- th:errors="campo": permette di stampare i messaggi di errore associati a quel campo
+                i messaggi di errore vengono prodotti da sprinf MVC nel controller
+                scattano per due motivi:
+                1. la validazione messa sul campo del dto non rispetta i criteri
+                2. nel service/controller ci sono metodi di controllo 
+                che rispetto al valore inserito in questo campo danno errore 
+                th:if=condizione permette di mostrare o nascondere l'elemento, se la condizione è vera lo mostra
+                la condizione si base sul fatto che siano stati catturati errori su quel campo
+                 -->
+            </label>
+            <br />
+
+            <label>Cognome:
+                <input type="text" th:field="*{cognome}">
+                <small th:if="${#fields.hasErrors('cognome')}" th:errors="*{cognome}"></small>
+            </label>
+            <br />
+
+            <label>Email:
+                <input type="email" th:field="*{email}">
+                <small th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></small>
+            </label>
+            <br />
+
+            <label>Telefono:
+                <input type="text" th:field="*{telefono}">
+                <small th:if="${#fields.hasErrors('telefono')}" th:errors="*{telefono}"></small>
+            </label>
+            <br />
+
+            <label>Data di nascita:
+                <input type="date" th:field="*{dataNascita}">
+                <small th:if="${#fields.hasErrors('dataNascita')}" th:errors="*{dataNascita}"></small>
+            </label>
+            <br />
+        </fieldset>
+        <fieldset>
+            <legend>Dati studente</legend>
+
+            <label>Matricola:
+                <input type="text" th:field="*{matricola}">
+                <small th:if="${#fields.hasErrors('matricola')}" th:errors="*{matricola}"></small>
+            </label>
+            <br />
+
+            <label>Corso di Laurea:
+                <input type="text" th:field="*{corsoDiLaurea}">
+                <small th:if="${#fields.hasErrors('corsoDiLaurea')}" th:errors="*{corsoDiLaurea}"></small>
+            </label>
+            <br />
+
+            <label>Anno di corso:
+                <input type="number" th:field="*{annoDiCorso}">
+                <small th:if="${#fields.hasErrors('annoDiCorso')}" th:errors="*{annoDiCorso}"></small>
+            </label>
+            <br />
+
+            <label>Status:
+                <select th:field="*{status}">
+                    <option th:each="st : ${statusValues}" th:value="${st}" th:text="${st}"></option>
+                </select>
+                <small th:if="${#fields.hasErrors('status')}" th:errors="*{status}"></small>
+            </label>
+            <br />
+
+            <button type="submit">Salva</button>
+        </fieldset>
+    </form>
+
+    <footer th:replace="~{fragments/layout :: footer}"></footer>
+
+</body>
+
+
+</html>

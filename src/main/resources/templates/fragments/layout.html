@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="it" xmlns="http://www.thymeleaf.org">
+
+<!-- creo un frammento dell'head  che può essere riutilizato negli altri templates
+ questo fragment permette di passare head e titolo nelle pagine che ne faranno uso-->
+<head th:fragment="head(title)">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:text="${title}">Ateneo</title>
+    <!-- così creo un URL dinamico che viene gestito da thymeleaf,
+    in questo modo non scrivo un link fisso ma lascio a thymeleaf la possibilità di costruirlo
+    dinamicamente in bas al percorso -->
+    <link rel="stylesheet" th:href="@{/css/app.css}">
+    <script defer th:src="@{/js/app.js}"></script>
+</head>
+<body>
+    <!-- frammento che mi permette di inserire poi in tutte le altre pagine la navbar
+      dove navbar è il nome che sto assegnando a questo frammento-->
+      <header th:fragment="navbar">
+            <nav>
+              <a th:href="@{/}">Home</a>
+              <a th:href="@{/studenti}">Studenti</a>
+              <a th:href="@{/corsi}">Corsi</a>
+              <span>   </span>
+              <a sec:authorize="!hasAnyRole('STU', 'DOC')" th:href="@{/login}">Login</a>
+              <a sec:authorize="hasAnyRole('STU', 'DOC')" th:href="@{/logout}">Logout</a>
+            </nav>
+            
+            <div th:replace="~{fragments/messaggi :: flashMessages}" ></div>
+            <!-- quindi qui stiamo includendo usando replace un div preso da un altro template -->
+            <hr/>
+    </header>
+    <!-- includo il frammento dei messaggi che mi permette di settare
+    messaggi di successo o errore a seconda di alcuni valori che verranno 
+    passati tramite il Model dal controller 
+    th: replace = "~{nomeTemplate :: nomeFragment}"
+    vai in quel template prendi il fragment con quel nome e rimpiazza questo div con quel frammento-->
+    
+
+    <footer th:fragment="footer">
+        <hr/>
+        <small>App Ateneo</small>
+    </footer>
+</body>
+</html>
