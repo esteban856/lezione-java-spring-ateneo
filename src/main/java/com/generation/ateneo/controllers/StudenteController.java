@@ -71,6 +71,7 @@ public class StudenteController {
         Persona p = user.getPersona();
         if(p != null && p instanceof Studente s){
             model.addAttribute("studente", s);
+            log.info("CIAO altro log");
             return "redirect:/studenti/" + p.getId();
         }
 
