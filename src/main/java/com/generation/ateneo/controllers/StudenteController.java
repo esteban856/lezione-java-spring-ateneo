@@ -58,7 +58,8 @@ public class StudenteController {
         if(authentication != null){
             UserAccount user = (UserAccount)authentication.getPrincipal();
             Persona p = user.getPersona();
-            model.addAttribute("id", p.getId());
+            model.addAttribute("idPersona", p.getId());
+            log.info("Altro log");
         }
         log.info("Log aggionto qui");
         model.addAttribute("studenti", studenteService.getAll());
@@ -71,6 +72,7 @@ public class StudenteController {
         Persona p = user.getPersona();
         if(p != null && p instanceof Studente s){
             model.addAttribute("studente", s);
+            log.info("CIAO altro log");
             return "redirect:/studenti/" + p.getId();
         }
 
