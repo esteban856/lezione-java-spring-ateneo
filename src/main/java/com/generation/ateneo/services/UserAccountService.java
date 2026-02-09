@@ -100,4 +100,22 @@ public class UserAccountService extends GenericService<Long, UserAccount, UserAc
     public Optional<UserAccount> findById(Long id) {
         return getRepository().findWithRuoloAndPersonaById(id);
     }
+
+    public Boolean updatePassword(Long id, String password, String confermaPassword){
+        UserAccount user = getByIdOrNull(id);
+
+        String oldPassword = user.getPassword();
+
+        boolean ok = false;
+
+        if(!password.isBlank() && !confermaPassword.isBlank() &&
+            !password.equals(oldPassword) && password.equals(confermaPassword)){
+            user.setPassword(password);
+            save(user);
+            ok = true;
+            log.info("cambio password effettuato correttamente");
+        }
+        return ok;
+
+    }
 }
