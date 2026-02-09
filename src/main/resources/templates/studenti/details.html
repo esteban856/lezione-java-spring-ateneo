@@ -54,6 +54,36 @@
             <button type="submit">Iscriviti</button>
         </form>
     </section>
+        
+    <section id="sicurezza" 
+             sec:authorize="hasRole('STU')"
+             th:if="${studente.id == #authentication.principal.persona.id}"
+             style="margin-top: 30px; border-top: 2px solid #eee; padding-top: 20px;">
+        
+        <h2>Sicurezza Account</h2>
+        <div style="background-color: #f9f9f9; padding: 15px; border-radius: 5px; max-width: 400px;">
+            <h3>Cambia Password</h3>
+            
+            <form th:action="@{/studenti/{id}/change-password(id=${studente.id})}" method="post">
+                <div style="margin-bottom: 10px;">
+                    <label style="display:block; font-weight:bold;">Vecchia Password:</label>
+                    <input type="password" name="oldPassword" required style="width: 100%; padding: 5px;" />
+                </div>
+
+                <div style="margin-bottom: 10px;">
+                    <label style="display:block; font-weight:bold;">Nuova Password:</label>
+                    <input type="password" name="newPassword" required style="width: 100%; padding: 5px;" />
+                </div>
+
+                <div style="margin-bottom: 15px;">
+                    <label style="display:block; font-weight:bold;">Conferma Nuova Password:</label>
+                    <input type="password" name="confirmPassword" required style="width: 100%; padding: 5px;" />
+                </div>
+
+                <button type="submit" style="padding: 8px 15px; cursor: pointer;">Aggiorna Password</button>
+            </form>
+        </div>
+    </section>
 
     <h3>Elenco iscrizioni</h3>
     <table>

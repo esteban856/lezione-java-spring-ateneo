@@ -26,6 +26,7 @@ import com.generation.ateneo.entities.UserAccount;
 import com.generation.ateneo.services.CorsoService;
 import com.generation.ateneo.services.IscrizioneService;
 import com.generation.ateneo.services.StudenteService;
+import com.generation.ateneo.services.UserAccountService;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -47,6 +48,7 @@ public class StudenteController {
     private final StudenteService studenteService;
     private final IscrizioneService iscrizioneService;
     private final CorsoService corsoService;
+    private final UserAccountService userAccountService;
     // public StudenteController(StudenteService studenteService){
     //     this.studenteService = studenteService;
     // }
@@ -317,4 +319,38 @@ public class StudenteController {
     }
 
     
+    @PostMapping("/{id}/change-password")
+    public String changePassword(@PathVariable Long id,
+                                 @RequestParam("oldPassword") String oldPassword,
+                                 @RequestParam("newPassword") String newPassword,
+                                 @RequestParam("confirmPassword") String confirmPassword,
+                                 Authentication authentication,
+                                 RedirectAttributes ra) {
+        
+        UserAccount user = (UserAccount) authentication.getPrincipal();
+        if (user.getPersona() == null || !user.getPersona().getId().equals(id)) {
+            ra.addFlashAttribute("error", "Non sei autorizzato a cambiare questa password.");
+            return "redirect:/studenti";
+        }
+
+        if (!newPassword.equals(confirmPassword)) {
+            ra.addFlashAttribute("error", "Le nuove password non coincidono.");
+            return "redirect:/studenti/" + id;
+        }
+
+        if(newPassword.length() < 4){
+             ra.addFlashAttribute("error", "La password deve essere di almeno 4 caratteri.");
+             return "redirect:/studenti/" + id;
+        }
+
+        boolean success = userAccountService.changePassword(id, oldPassword, newPassword);
+
+        if (success) {
+            ra.addFlashAttribute("success", "Password aggiornata con successo.");
+        } else {
+            ra.addFlashAttribute("error", "La vecchia password inserita non è corretta.");
+        }
+
+        return "redirect:/studenti/" + id;
+    }
 }

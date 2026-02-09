@@ -98,6 +98,11 @@ public class CookieFilter extends OncePerRequestFilter{
 
 
     private Cookie getCookie(Cookie[] cookies, String cookieName){
+        // HttpServletRequest#getCookies() may return null when no cookies are present
+        if(cookies == null || cookieName == null || cookieName.isEmpty()){
+            return null;
+        }
+
         for(Cookie c : cookies){
             if(cookieName.equals(c.getName())){
                 return c;
