@@ -1,3 +1,4 @@
+    
 package com.generation.ateneo.services;
 
 import java.util.Optional;
@@ -31,6 +32,15 @@ public class UserAccountService extends GenericService<Long, UserAccount, UserAc
     //esempio se la mia password è 'ciao' quello che salvo nel database è il risultato dell'algoritmo
     //di hashing -> $2a$13$3/6bgOAB66XV.ZE9.KmrlOQfLY6q2D5xnFex9hYSHqLpBJHIQqyWe
 
+    public boolean cambiaPassword(UserAccount user, String oldPassword, String newPassword) {
+        if (user == null) return false;
+        if (!encoder.matches(oldPassword, user.getPassword())) {
+            return false;
+        }
+        user.setPassword(encoder.encode(newPassword));
+        getRepository().save(user);
+        return true;
+    }
 
     //Username e password che arrivano a questo service sono in chiaro
     public UserAccount findUserByUsernameAndPassword(String username, String password){

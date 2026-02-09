@@ -37,6 +37,28 @@
             <li><b>Status:</b> <span th:text="${studente.status}"></span></li>
         </ul>
     </section>
+
+    <!-- Form cambio password -->
+    <section sec:authorize="hasRole('STU')">
+        <h2>Cambia Password</h2>
+        <form th:action="@{/studenti/{id}/cambia-password(id=${studente.id})}" method="post">
+            <div>
+                <label for="oldPassword">Vecchia password:</label>
+                <input type="password" id="oldPassword" name="oldPassword" required />
+            </div>
+            <div>
+                <label for="newPassword">Nuova password:</label>
+                <input type="password" id="newPassword" name="newPassword" required />
+            </div>
+            <div>
+                <label for="confirmPassword">Conferma nuova password:</label>
+                <input type="password" id="confirmPassword" name="confirmPassword" required />
+            </div>
+            <button type="submit">Aggiorna password</button>
+        </form>
+        <div th:if="${passwordError != null}">[[${passwordError}]]</div>
+        <div th:if="${passwordSuccess != null}">[[${passwordSuccess}]]</div>
+    </section>
 <!-- 
     Elenco dei corsi a cui si può iscrivere (menù tendina)
     elenco dei corsi a cui è iscritto(e disiscrizione) -->

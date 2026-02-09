@@ -1,3 +1,4 @@
+    
 package com.generation.ateneo.services;
 
 import java.util.HashMap;
@@ -54,6 +55,11 @@ StudenteRepository //repository che estende JpaRepository<Entità,id>
 
     //INSERT/CREATE con il DTO
 
+    public boolean cambiaPassword(Long studenteId, String oldPassword, String newPassword) {
+        Studente studente = getByIdOrNull(studenteId);
+        if (studente == null || studente.getUserAccount() == null) return false;
+        return userAccountService.cambiaPassword(studente.getUserAccount(), oldPassword, newPassword);
+    }
 
     //metodi helper
     //normalizzazione email

@@ -1,3 +1,4 @@
+
 package com.generation.ateneo.controllers;
 
 import java.util.List;
@@ -50,6 +51,25 @@ public class StudenteController {
     // public StudenteController(StudenteService studenteService){
     //     this.studenteService = studenteService;
     // }
+
+    @PostMapping("/{id}/cambia-password")
+    public String cambiaPassword(@PathVariable Long id,
+                                 @RequestParam String oldPassword,
+                                 @RequestParam String newPassword,
+                                 @RequestParam String confirmPassword,
+                                 RedirectAttributes ra) {
+        if (!newPassword.equals(confirmPassword)) {
+            ra.addFlashAttribute("passwordError", "Le nuove password non coincidono.");
+            return "redirect:/studenti/" + id;
+        }
+        boolean cambiato = studenteService.cambiaPassword(id, oldPassword, newPassword);
+        if (cambiato) {
+            ra.addFlashAttribute("passwordSuccess", "Password aggiornata con successo.");
+        } else {
+            ra.addFlashAttribute("passwordError", "Vecchia password errata o errore nell'aggiornamento.");
+        }
+        return "redirect:/studenti/" + id;
+    }
 
     //metodo che ci permette di visualizzare la lista degli studenti-> LETTURA DATI del db
     //quindi rispodere ad una richiesta HTTP
