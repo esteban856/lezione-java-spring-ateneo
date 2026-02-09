@@ -6,7 +6,6 @@ import org.springframework.stereotype.Service;
 
 import com.generation.ateneo.entities.Ruolo;
 import com.generation.ateneo.entities.TipoRuolo;
-import com.generation.ateneo.entities.UserAccount;
 import com.generation.ateneo.repositories.RuoloRepository;
 
 import lombok.extern.slf4j.Slf4j;

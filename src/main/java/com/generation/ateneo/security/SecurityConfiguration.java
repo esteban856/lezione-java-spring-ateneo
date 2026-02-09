@@ -40,6 +40,7 @@ public class SecurityConfiguration {
             .authorizeHttpRequests(auth -> auth
                 //Richieste accessbili senza Authentication
                 .requestMatchers("/", "/login", "/css/**", "/js/**").permitAll()
+                .requestMatchers("/studenti/cambio-password").hasRole(TipoRuolo.STU.toString())
                 
                 //Blocco le richieste con ruolo Studente (STU)
                 .requestMatchers(

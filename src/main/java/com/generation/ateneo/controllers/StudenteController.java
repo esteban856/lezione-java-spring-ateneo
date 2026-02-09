@@ -26,6 +26,7 @@ import com.generation.ateneo.entities.UserAccount;
 import com.generation.ateneo.services.CorsoService;
 import com.generation.ateneo.services.IscrizioneService;
 import com.generation.ateneo.services.StudenteService;
+import com.generation.ateneo.services.UserAccountService;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -47,6 +48,7 @@ public class StudenteController {
     private final StudenteService studenteService;
     private final IscrizioneService iscrizioneService;
     private final CorsoService corsoService;
+    private final UserAccountService userAccountService;
     // public StudenteController(StudenteService studenteService){
     //     this.studenteService = studenteService;
     // }
@@ -316,5 +318,28 @@ public class StudenteController {
         return "redirect:/studenti/"+id;
     }
 
-    
+    // CAMBIO PASSWORD
+   @PostMapping("/cambio-password")
+    public String changePassword(@RequestParam String oldPassword, 
+                             @RequestParam String newPassword,
+                             @RequestParam String confirmPassword,
+                             Authentication authentication,
+                             RedirectAttributes ra) {
+    UserAccount user = (UserAccount) authentication.getPrincipal(); 
+    try {
+        //Controllo se le due nuove password coincidono
+        if (!newPassword.equals(confirmPassword)) {
+            ra.addFlashAttribute("error", "La nuova password e la conferma non coincidono.");
+            return "redirect:/studenti/" + user.getPersona().getId();
+        }
+        // Controllo vecchia password e ruolo)
+        userAccountService.updatePasswordStudente(user, oldPassword, newPassword);
+        ra.addFlashAttribute("success", "Password aggiornata con successo!");
+    } catch (Exception e) {
+        ra.addFlashAttribute("error", e.getMessage());
+    }
+    return "redirect:/studenti/" + user.getPersona().getId();
+    }
+
+        
 }

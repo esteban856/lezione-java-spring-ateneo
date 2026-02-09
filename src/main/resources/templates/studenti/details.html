@@ -114,6 +114,30 @@
             </tr>
         </tbody>
     </table>
+    <section sec:authorize="hasRole('STU')" id="cambio-password">
+    <h2>Impostazioni Sicurezza</h2>
+    <h3>Cambia Password</h3>
+
+    <!-- Messaggi di feedback -->
+    <div th:if="${success}" th:text="${success}"></div>
+    <div th:if="${error}" th:text="${error}"></div>
+
+    <form th:action="@{/studenti/cambio-password}" method="post">
+        <div>
+            <label>Vecchia Password:</label><br>
+            <input type="password" name="oldPassword" />
+        </div>
+        <div style="margin-bottom: 10px;">
+            <label>Nuova Password:</label><br>
+            <input type="password" name="newPassword" />
+        </div>
+        <div>
+            <label>Conferma Nuova Password:</label><br>
+            <input type="password" name="confirmPassword"/>
+        </div>
+        <button type="submit" >Aggiorna Password</button>
+    </form>
+</section>
     <footer th:replace="~{fragments/layout :: footer}"></footer>
 </body>
 </html>

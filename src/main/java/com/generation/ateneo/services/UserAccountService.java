@@ -100,4 +100,26 @@ public class UserAccountService extends GenericService<Long, UserAccount, UserAc
     public Optional<UserAccount> findById(Long id) {
         return getRepository().findWithRuoloAndPersonaById(id);
     }
+
+
+    //METODO PER CAMBIO PASSWORD
+   public void updatePasswordStudente(UserAccount user, String oldPassword, String newPassword) {
+    // Controllo che sia uno studente
+    if (!(user.getPersona() instanceof Studente)) {
+        log.warn("Tentativo di cambio password negato: l'utente {} non è uno studente", user.getUsername());
+        throw new RuntimeException("Operazione consentita solo agli account studente.");
+    }
+    // Verifica della password attuale
+    if (!encoder.matches(oldPassword, user.getPassword())) {
+        throw new RuntimeException("La password attuale non è corretta.");
+    }
+    //Validazione della nuova password 
+    if (newPassword == null) {
+        throw new RuntimeException("Inserire nuova password");
+    }
+    //Hashing e salvataggio
+    user.setPassword(encoder.encode(newPassword));
+    getRepository().save(user);
+    log.info("Password aggiornata con successo per lo studente: {}", user.getUsername());
+    }
 }
