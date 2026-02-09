@@ -100,4 +100,26 @@ public class UserAccountService extends GenericService<Long, UserAccount, UserAc
     public Optional<UserAccount> findById(Long id) {
         return getRepository().findWithRuoloAndPersonaById(id);
     }
+
+    public boolean updatePassword(Persona p, String vecchiaPassword, String nuovaPassword) {
+    // Recuperiamo l'account associato alla Persona
+    UserAccount user = p.getUserAccount();
+
+    // Controlliamo se l'utente ha un account
+    if (user == null) {
+        log.error("Tentativo di cambio password per una persona senza account: {}", p.getId());
+        return false;
+    }
+
+    // Verifichiamo che la password vecchia è quella presente attualmente nel DB
+    if (encoder.matches(vecchiaPassword, user.getPassword())) {
+        user.setPassword(encoder.encode(nuovaPassword));
+        getRepository().save(user);
+        log.info("Password aggiornata con successo per l'utente: {}", user.getUsername());
+        return true;
+    } else {
+        log.warn("Cambio password fallito: la vecchia password non corrisponde per l'utente: {}", user.getUsername());
+        return false;
+    }
+}
 }
