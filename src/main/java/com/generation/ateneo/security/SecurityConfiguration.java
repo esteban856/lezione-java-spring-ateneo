@@ -45,7 +45,7 @@ public class SecurityConfiguration {
                 .requestMatchers(
                     "/studenti/{id}/iscrizioni",
                     "/studenti/{id}/iscrizioni/{iscrizioneId}/delete",
-                    "/studenti/pagina-studente"
+                    "/studenti/{id}/cambio-password"
                 ).hasRole(TipoRuolo.STU.toString())
 
                 //Blocco le richieste che effettuano operazione CRUD dando accesso solo al ruolo di docente (DOC)
