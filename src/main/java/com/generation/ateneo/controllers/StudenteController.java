@@ -59,6 +59,7 @@ public class StudenteController {
             UserAccount user = (UserAccount)authentication.getPrincipal();
             Persona p = user.getPersona();
             model.addAttribute("idPersona", p.getId());
+            log.info("modifca");
         }
         model.addAttribute("studenti", studenteService.getAll());
         return "studenti/list";
