@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en" xmlns="http://www.thymeleaf.org">
+
 <head th:replace="~{fragments/layout :: head('Dettaglio Studente')}"></head>
 
 <body>
@@ -21,10 +22,11 @@
             <li><b>Età:</b> <span th:text="${studente.eta != null ? studente.eta : '-'}"></span></li>
             <li><b>Email:</b> <span th:text="${studente.email}"></span></li>
             <li><b>Telefono:</b> <span th:text="${studente.telefono}"></span></li>
-            <li><b>Data di nascita:</b> 
-                <span th:text=
-                "${studente.dataNascita != null ? #temporals.format(studente.dataNascita,'dd/MM/yyyy') : '-'}">
-                </span></li>
+            <li><b>Data di nascita:</b>
+                <span
+                    th:text="${studente.dataNascita != null ? #temporals.format(studente.dataNascita,'dd/MM/yyyy') : '-'}">
+                </span>
+            </li>
         </ul>
     </section>
 
@@ -37,7 +39,7 @@
             <li><b>Status:</b> <span th:text="${studente.status}"></span></li>
         </ul>
     </section>
-<!-- 
+    <!-- 
     Elenco dei corsi a cui si può iscrivere (menù tendina)
     elenco dei corsi a cui è iscritto(e disiscrizione) -->
     <section id="iscrizioni">
@@ -75,7 +77,7 @@
         </thead>
         <tbody>
             <tr th:if="${#lists.isEmpty(studente.iscrizioni)}">
-               <td colspan="12">Nessuna iscrizione attiva</td>
+                <td colspan="12">Nessuna iscrizione attiva</td>
             </tr>
 
             <!-- th:classappend aggiunge (non sovrascrive) una o più classi CSS all'attributo class esistente dell'elemento
@@ -84,7 +86,7 @@
             il valore di highlightIscrizioneId viene passato dal controller tramite il model
              e usato per evidenziare la riga corrispondente -->
             <tr th:each="i : ${studente.iscrizioni}"
-            th:classappend="${(highlightIscrizioneId != null and i.id == highlightIscrizioneId) ? 'row-highlight' : ''}">
+                th:classappend="${(highlightIscrizioneId != null and i.id == highlightIscrizioneId) ? 'row-highlight' : ''}">
                 <td th:text="${i.id}"></td>
                 <td th:text="${i.corso.codice}"></td>
 
@@ -92,28 +94,54 @@
                 <td>
                     <!-- questo link compare solo se il corso non è null -->
                     <a th:if="${i.corso != null}" th:href="@{/corsi/{id} (id=${i.corso.id})}"
-                       th:text="${i.corso.titolo}"></a>
-                       <span th:if="${i.corso == null}">-</span> <!-- se il corso non c'è metto un trattino -->
+                        th:text="${i.corso.titolo}"></a>
+                    <span th:if="${i.corso == null}">-</span> <!-- se il corso non c'è metto un trattino -->
                 </td>
                 <td th:text="${i.corso.descrizione}"></td>
-                <td th:text="${i.corso.dataInizio != null ? #temporals.format(i.corso.dataInizio, 'dd/MM/yyyy HH:mm') : '-'}"></td>
-                <td th:text="${i.corso.dataFine != null ? #temporals.format(i.corso.dataFine, 'dd/MM/yyyy HH:mm') : '-'}"></td>
+                <td
+                    th:text="${i.corso.dataInizio != null ? #temporals.format(i.corso.dataInizio, 'dd/MM/yyyy HH:mm') : '-'}">
+                </td>
+                <td
+                    th:text="${i.corso.dataFine != null ? #temporals.format(i.corso.dataFine, 'dd/MM/yyyy HH:mm') : '-'}">
+                </td>
                 <td th:text="${i.corso.crediti}"></td>
                 <td th:text="${i.corso.docente == null ? '-' : i.corso.docente.cognome}"></td>
                 <td th:text="${i.statusIscrizione}"></td>
                 <td th:text="${i.votoFinale != null ? i.votoFinale : '-'}"></td>
-                <td th:text="${i.dataIscrizione != null ? #temporals.format(i.dataIscrizione, 'dd/MM/yyyy') : '-'}"></td>
+                <td th:text="${i.dataIscrizione != null ? #temporals.format(i.dataIscrizione, 'dd/MM/yyyy') : '-'}">
+                </td>
                 <td>
                     <!-- form per inviare la richiesta di disiscrizione, tramite la form con il metodo POST
                     mando l'id dell'iscrizione da rimuovere -->
-                    <form sec:authorize="hasRole('STU')" th:action="@{/studenti/{studenteId}/iscrizioni/{iscrizioneId}/delete (studenteId=${studente.id}, iscrizioneId=${i.id})}"
-                          method="post" data-confirm="Sei sicuro di voler togliere l'iscrizione?">
+                    <form sec:authorize="hasRole('STU')"
+                        th:action="@{/studenti/{studenteId}/iscrizioni/{iscrizioneId}/delete (studenteId=${studente.id}, iscrizioneId=${i.id})}"
+                        method="post" data-confirm="Sei sicuro di voler togliere l'iscrizione?">
                         <button type="submit">Rimuovi</button>
                     </form>
                 </td>
             </tr>
         </tbody>
     </table>
+    <section th:if="${idPersona == studente.id}">
+        <hr>
+        <h3>Sicurezza Account</h3>
+        <form th:action="@{/studenti/{id}/cambio-password (id=${studente.id})}" method="post">
+            <div>
+                <label>Vecchia Password:</label><br>
+                <input type="password" name="vecchiaPassword" required>
+            </div>
+            <div>
+                <label>Nuova Password:</label><br>
+                <input type="password" name="nuovaPassword" required>
+            </div>
+            <div>
+                <label>Conferma Nuova Password:</label><br>
+                <input type="password" name="confermaPassword" required>
+            </div>
+            <button type="submit">Aggiorna Password</button>
+        </form>
+    </section>
     <footer th:replace="~{fragments/layout :: footer}"></footer>
 </body>
+
 </html>
