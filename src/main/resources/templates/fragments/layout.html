@@ -23,6 +23,7 @@
               <a th:href="@{/corsi}">Corsi</a>
               <span>   </span>
               <a sec:authorize="!hasAnyRole('STU', 'DOC')" th:href="@{/login}">Login</a>
+              <a sec:authorize="hasAnyRole('STU', 'DOC')" th:href="@{/cambia-password}">Cambia password</a>
               <a sec:authorize="hasAnyRole('STU', 'DOC')" th:href="@{/logout}">Logout</a>
             </nav>
             
