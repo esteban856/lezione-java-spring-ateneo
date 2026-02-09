@@ -21,6 +21,7 @@
               <a th:href="@{/}">Home</a>
               <a th:href="@{/studenti}">Studenti</a>
               <a th:href="@{/corsi}">Corsi</a>
+              <a th:href="@{/user/change-psw}">Cambia password</a>
               <span>   </span>
               <a sec:authorize="!hasAnyRole('STU', 'DOC')" th:href="@{/login}">Login</a>
               <a sec:authorize="hasAnyRole('STU', 'DOC')" th:href="@{/logout}">Logout</a>

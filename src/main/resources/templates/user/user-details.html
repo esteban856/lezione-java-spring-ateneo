@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Dettaglio User')}"></head>
+
+<body>
+    <header th:replace="~{fragments/layout :: navbar}"></header>
+
+    <h1>Dettaglio user</h1>
+    <p>
+        <a th:href="@{/studenti}">Torna alla lista</a>
+    </p>
+
+    <section>
+        <h2>Anagrifica</h2>
+        <ul>
+            <!-- th:text="${studente.id}" sostituisce il segnaposto con il valore dello studente 
+            passato dal controller -->
+            <li><b>ID:</b> <span th:text="${persona.id}"></span></li>
+            <li><b>Nome:</b> <span th:text="${persona.nome}"></span></li>
+            <li><b>Cognome:</b> <span th:text="${persona.cognome}"></span></li>
+            <li><b>Età:</b> <span th:text="${persona.eta != null ? persona.eta : '-'}"></span></li>
+            <li><b>Email:</b> <span th:text="${persona.email}"></span></li>
+            <li><b>Telefono:</b> <span th:text="${persona.telefono}"></span></li>
+            <li><b>Data di nascita:</b> 
+                <span th:text=
+                "${persona.dataNascita != null ? #temporals.format(persona.dataNascita,'dd/MM/yyyy') : '-'}">
+                </span></li>
+        </ul>
+    </section>
+
+    <section>
+        <div th:if="${idPersona != null}">
+            <h3>Cambio password</h3>
+            <form th:action="@{/user/{id}/change-psw(id=${idPersona})}" method="post">
+                <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+
+                <div>
+                    <label>Username:
+                        <input type="text" name="username" th:value="${persona.userAccount != null ? persona.userAccount.username : ''}" />
+                    </label>
+                </div>
+
+                <div>
+                    <label>Password attuale:
+                        <input type="password" name="oldPsw" />
+                    </label>
+                </div>
+
+                <div>
+                    <label>Nuova password:
+                        <input type="password" name="newPsw" />
+                    </label>
+                </div>
+
+                <div>
+                    <button type="submit">Cambia password</button>
+                </div>
+            </form>
+
+            <div th:if="${error != null}" style="color:red;" th:text="${error}"></div>
+            <div th:if="${success != null}" style="color:green;" th:text="${success}"></div>
+        </div>
+    </section>
+
+    <footer th:replace="~{fragments/layout :: footer}"></footer>
+</body>
+</html>

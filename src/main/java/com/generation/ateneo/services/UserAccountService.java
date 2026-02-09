@@ -46,6 +46,21 @@ public class UserAccountService extends GenericService<Long, UserAccount, UserAc
             return null;
         }
     }
+    
+    
+    public UserAccount changePasswordUser(String username, String oldPassword, String newPassword) {
+
+        UserAccount user = findUserByUsernameAndPassword(username, oldPassword);
+        if (user == null) return null;
+
+        if (!encoder.matches(oldPassword, user.getPassword())) {
+            return null;
+        }
+
+        user.setPassword(encoder.encode(newPassword));
+        getRepository().save(user);
+        return user;
+    }
 
 
     public void linkUserToPersona(Persona p, TipoRuolo ruolo){
